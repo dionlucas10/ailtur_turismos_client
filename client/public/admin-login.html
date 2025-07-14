@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin - Ailtur Turismo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body { background: #f5f5f5; }
+    .login-container { max-width: 400px; margin: 80px auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+    .logo { display: block; margin: 0 auto 24px; width: 100px; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <img src="IMG/logo/logo.png" alt="Logo" class="logo">
+    <h2 class="mb-4 text-center">Login do Administrador</h2>
+    <form id="loginForm">
+      <div class="mb-3">
+        <label for="usuario" class="form-label">Usuário</label>
+        <input type="text" class="form-control" id="usuario" name="usuario" required>
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="password" class="form-control" id="senha" name="senha" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Entrar</button>
+      <div id="erro" class="text-danger mt-3" style="display:none;"></div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value;
+      const senha = document.getElementById('senha').value;
+      const erroDiv = document.getElementById('erro');
+      erroDiv.style.display = 'none';
+      try {
+        const res = await fetch('https://ailtur-turismos-server.onrender.com/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ usuario, senha })
+        });
+        const data = await res.json();
+        if (data.sucesso) {
+          window.location.href = 'admin.html';
+        } else {
+          erroDiv.textContent = 'Usuário ou senha incorretos';
+          erroDiv.style.display = 'block';
+        }
+      } catch (err) {
+        erroDiv.textContent = 'Erro ao conectar ao servidor';
+        erroDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html> 
